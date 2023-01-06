@@ -5,6 +5,9 @@ RUN apt-get update \
        unzip \
        wget \
        libnss3 \
+       libgconf-2-4 \
+       libxss1 \
+       libgtk2.0-0 libsm6 libxrender1 libxtst6 libxi6 \
     && rm -rf /var/lib/apt/lists/*
 
 ADD build/libs/RemiBot-1.0-all.jar /app/remibot.jar
