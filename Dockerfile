@@ -14,8 +14,10 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 RUN sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
 RUN apt-get update
 RUN apt --fix-broken install
-RUN apt-get install google-chrome-stable -y \
- && rm -rf /var/lib/apt/lists/*
+RUN wget --no-verbose -O /tmp/chrome.deb https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_103.0.5060.134-1_amd64.deb \
+  && apt install -y /tmp/chrome.deb \
+  && rm /tmp/chrome.deb \
+  && rm -rf /var/lib/apt/lists/*
 
 ADD build/libs/RemiBot-1.0-all.jar /app/remibot.jar
 WORKDIR /app
