@@ -89,7 +89,7 @@ public class RemiBot {
         MotDuJourService service = new MotDuJourService(api);
         service.start();
         try {
-            new ChangePseudoService().start();
+//            new ChangePseudoService().start();
         }catch (Exception e) {
             e.printStackTrace();
         }

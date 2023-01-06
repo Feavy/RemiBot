@@ -1,6 +1,8 @@
 package reminator.RemiBot.Services.pricescanner.scans;
 
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import reminator.RemiBot.Services.pricescanner.Product;
 import reminator.RemiBot.Services.pricescanner.update.ProductPriceUpdate;
 import reminator.RemiBot.utils.HTTPRequest;
@@ -19,14 +21,27 @@ public class PriceScan implements Scan {
     public String mention;
     public String filter;
 
+    static ChromeDriver driver;
+    static {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--headless");
+        options.addArguments("--disable-dev-shm-usage");
+        driver = new ChromeDriver(options);
+    }
+
     public PriceScan(String mention, String name, String url, String filter) throws IOException {
         this.mention = mention;
         this.filter = filter;
         this.product = new Product(name, url, retrievePrice(url), true);
     }
 
-    public float retrievePrice(String url) throws IOException {
-        String rep = new HTTPRequest(url).GET();
+    public float retrievePrice(String url) {
+//        String rep = new HTTPRequest(url).GET();
+        driver.get(url);
+        String rep = driver.getPageSource();
+        System.out.println(rep);
         String s = rep.split(filter+"[^0-9]*")[1];
 
         Matcher m = NUMBER_PATTERN.matcher(s);
