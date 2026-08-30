@@ -37,6 +37,6 @@ jobs:
         DOCKER_IMAGE: remibot:latest
         DEPLOYMENT: deployment.yml
         BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-        PLATFORM: arm64
+        PLATFORM: amd64
     - name: Restart deployment
       run: kubectl rollout restart deployment remibot --namespace feavy
