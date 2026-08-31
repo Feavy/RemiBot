@@ -1,5 +1,9 @@
 name: Java CI-CD with Gradle and Azure
 
+permissions:
+  contents: read
+  packages: write
+
 on:
   push:
     branches: [ main ]
