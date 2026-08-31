@@ -44,3 +44,5 @@ jobs:
       env:
         DEPLOYMENT: remibot
         NAMESPACE: feavy
+        BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
+
