@@ -28,15 +28,19 @@ jobs:
         name: build-jars
         path: |
           build/libs
+    - name: Login to GHCR
+      uses: docker/login-action@v4
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: ghcr.io/feavy/remibot:latest
     - uses: feavy/deploy@main
       env:
-        KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
-        GITHUB_USERNAME: feavy
-        GITHUB_TOKEN: ${{ secrets.PAT }}
-        DOCKERFILE_PATH: .
-        DOCKER_IMAGE: remibot:latest
-        DEPLOYMENT: deployment.yml
-        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
-        PLATFORM: amd64
-    - name: Restart deployment
-      run: kubectl rollout restart deployment remibot --namespace feavy
+        DEPLOYMENT: remibot
+        NAMESPACE: feavy
