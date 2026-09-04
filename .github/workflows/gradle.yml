@@ -36,17 +36,29 @@ jobs:
       uses: docker/login-action@v4
       with:
         registry: ghcr.io
-        username: ${{ github.actor }}
+        username: ${{ github.repository_owner }}
         password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Set image tag
+      run: |
+        IMAGE_TAG=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+        [[ "${{ github.ref }}" == "refs/tags/"* ]] && IMAGE_TAG=$(echo $VERSION | sed -e 's/^v//')
+        [ "IMAGE_TAG" == "main" ] && VERSION=latest
+        echo "IMAGE_NAME=${GITHUB_REPOSITORY##*/}" >> "$GITHUB_ENV"
+        echo "IMAGE_TAG=$IMAGE_TAG" >> "$GITHUB_ENV"
+        echo "Image: $IMAGE_NAME:$IMAGE_TAG"
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
       with:
         context: .
         push: true
-        tags: ghcr.io/feavy/remibot:latest
+        tags: ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
     - uses: feavy/deploy@main
       env:
         DEPLOYMENT: remibot
         NAMESPACE: feavy
         BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
+        FILE_PATH: "kubernetes/apps/remibot/release.yaml"
+        YAML_PATH: ".spec.values.apps.remibot.image.tag"
+        REF: "${{ github.ref_name }}"
+        TAG: "${{ env.IMAGE_TAG }}"
 
