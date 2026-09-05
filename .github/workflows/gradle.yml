@@ -63,7 +63,7 @@ jobs:
         NAMESPACE: feavy
         BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
         FILE_PATH: "kubernetes/apps/remibot/release.yaml"
-        YAML_PATH: "spec.values.apps.remibot.image.tag"
+        YAML_PATH: ".spec.values.apps.remibot.image.tag"
         REF: "${{ github.ref_name }}"
         TAG: "${{ env.IMAGE_TAG }}"
 
